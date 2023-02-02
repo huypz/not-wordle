@@ -9,8 +9,14 @@ import Banner from '../Banner';
 import Keyboard from '../Keyboard';
 import Guess from '../Guess';
 
+const POPUP_TIMEOUT = 2000;
+
 function Game() {
-  const [answer, setAnswer] = React.useState(sample(WORDS));
+  const [answer, setAnswer] = React.useState(() => {
+    const answer = sample(WORDS);
+    console.log(answer);
+    return answer;
+  });
   const [guessInput, setGuessInput] = React.useState('');
   const [guessResults, setGuessResults] = React.useState([]);
   const [isGuessCorrect, setIsGuessCorrect] = React.useState(false);
@@ -20,7 +26,20 @@ function Game() {
   function onSubmitGuess(event) {
     event.preventDefault();
 
-    const guess = guessInput.toUpperCase();
+    const guess = guessInput.toLowerCase();
+
+    if (!WORDS.includes(guess)) {
+      const popup = document.createElement('div');
+      popup.className = 'popup';
+      const popupText = document.createElement('p');
+      popupText.innerText = 'Not in word list';
+      popup.appendChild(popupText);
+      document.getElementById('popup-wrapper').appendChild(popup);
+
+      setTimeout(() => popup.remove(), POPUP_TIMEOUT);
+      return;
+    }
+
     setIsGuessCorrect(guess === answer);
 
     const guessResult = checkGuess(guess, answer);
@@ -41,7 +60,11 @@ function Game() {
   }
 
   function restartGame() {
-    setAnswer(sample(WORDS));
+    setAnswer(() => {
+      const answer = sample(WORDS);
+      console.log(answer);
+      return answer;
+    });
     setGuessInput('');
     setGuessResults([]);
     setIsGuessCorrect(false);
@@ -66,6 +89,8 @@ function Game() {
           maxLength={WORD_LENGTH}
           value={guessInput}
           onChange={(event) => setGuessInput(event.target.value)}
+          pattern={`[A-Za-z]{${WORD_LENGTH}}`}
+          title={`Enter a ${WORD_LENGTH}-letter word.`}
         />
       </form>
 

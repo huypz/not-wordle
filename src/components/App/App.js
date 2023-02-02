@@ -5,7 +5,7 @@ function App() {
   return (
     <div className="wrapper">
       <Header />
-
+      <div id="popup-wrapper"></div>
       <div className="game-wrapper">
         <Game />
       </div>

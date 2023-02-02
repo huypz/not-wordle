@@ -3,7 +3,7 @@ export function checkGuess(guess, answer) {
     return null;
   }
 
-  const guessChars = guess.toUpperCase().split('');
+  const guessChars = guess.toLowerCase().split('');
   const answerChars = answer.split('');
 
   return guessChars.map((guessChar, index) => {
