@@ -230,3 +230,42 @@ h1 {
     transform: translateY(0%);
   }
 }
+
+.keys-wrapper {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10%;
+}
+
+.keys-wrapper p {
+  display: flex;
+  position: relative;
+  margin-top: 1%;
+  gap: 1%;
+}
+
+.key {
+  display: grid;
+  width: 9%;
+  place-content: center;
+  aspect-ratio: 1 / 1;
+  border-radius: 8px;
+  background-color: var(--color-gray-900);
+  font-weight: bold;
+}
+
+.key.correct {
+  background: var(--color-success);
+  border-color: var(--color-success);
+  color: white;
+}
+.key.incorrect {
+  background: var(--color-gray-300);
+  border-color: var(--color-gray-300);
+  color: white;
+}
+.key.misplaced {
+  background: var(--color-warning);
+  border-color: var(--color-warning);
+  color: white;
+}

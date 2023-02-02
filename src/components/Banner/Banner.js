@@ -1,9 +1,7 @@
-import React from 'react';
-
-function Banner({ type, message }) {
+function Banner({ type, children }) {
   return (
     <div className={`${type} banner`}>
-      <p>{message}</p>
+      {children}
     </div>
   );
 }

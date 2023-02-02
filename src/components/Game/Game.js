@@ -3,36 +3,57 @@ import React from 'react';
 import { range, sample } from '../../utils';
 import { WORDS } from '../../data';
 import { NUM_OF_GUESSES_ALLOWED, WORD_LENGTH } from '../../constants';
+import { checkGuess } from '../../game-helpers';
 
-import Guess from '../Guess';
 import Banner from '../Banner';
-
-// Pick a random word on every pageload.
-const answer = sample(WORDS);
+import Keyboard from '../Keyboard';
+import Guess from '../Guess';
 
 function Game() {
+  const [answer, setAnswer] = React.useState(sample(WORDS));
   const [guessInput, setGuessInput] = React.useState('');
-  const [guesses, setGuesses] = React.useState([]);
+  const [guessResults, setGuessResults] = React.useState([]);
+  const [isGuessCorrect, setIsGuessCorrect] = React.useState(false);
+  const [keyboardState, setKeyboardState] = React.useState({});
   const [isGameInSession, setIsGameInSession] = React.useState(true);
 
   function onSubmitGuess(event) {
     event.preventDefault();
 
     const guess = guessInput.toUpperCase();
-    const newGuesses = [...guesses, guess];
+    setIsGuessCorrect(guess === answer);
 
-    setGuesses(newGuesses);
-    setGuessInput('');
+    const guessResult = checkGuess(guess, answer);
+    const newGuessResults = [...guessResults, guessResult];
+    setGuessResults(newGuessResults);
+
+    const newKeyboardState = { ...keyboardState };
+    guessResult.forEach(({ letter, status }) => {
+      newKeyboardState[letter] = status;
+    });
+    setKeyboardState(newKeyboardState);
+
     setIsGameInSession(
-      newGuesses.length < NUM_OF_GUESSES_ALLOWED && guess !== answer
+      newGuessResults.length < NUM_OF_GUESSES_ALLOWED && guess !== answer
     );
+
+    setGuessInput('');
+  }
+
+  function restartGame() {
+    setAnswer(sample(WORDS));
+    setGuessInput('');
+    setGuessResults([]);
+    setIsGuessCorrect(false);
+    setKeyboardState({});
+    setIsGameInSession(true);
   }
 
   return (
     <>
       <div className="guess-results">
         {range(NUM_OF_GUESSES_ALLOWED).map((index) => (
-          <Guess key={index} guess={guesses[index]} answer={answer} />
+          <Guess key={index} guessResults={guessResults[index]} />
         ))}
       </div>
       <form className="guess-input-wrapper" onSubmit={onSubmitGuess}>
@@ -47,23 +68,36 @@ function Game() {
           onChange={(event) => setGuessInput(event.target.value)}
         />
       </form>
+
+      <Keyboard keyboardState={keyboardState} />
+
       {isGameInSession ||
-        (guesses[guesses.length - 1] === answer ? (
+        (isGuessCorrect ? (
           <Banner
             type={'happy'}
-            message={
+            children={
               <>
-                <strong>Congratulations!</strong> Got it in{' '}
-                <strong>{guesses.length} guesses</strong>.
+                <p>
+                  <strong>Congratulations!</strong> Got it in{' '}
+                  <strong>{guessResults.length} guesses</strong>.
+                </p>
+                <button onClick={restartGame}>
+                  <strong>RESTART GAME</strong>
+                </button>
               </>
             }
           />
         ) : (
           <Banner
             type={'sad'}
-            message={
+            children={
               <>
-                Sorry, the correct answer is <strong>{answer}</strong>.
+                <p>
+                  Sorry, the correct answer is <strong>{answer}</strong>.
+                </p>
+                <button onClick={restartGame}>
+                  <strong>RESTART GAME</strong>
+                </button>
               </>
             }
           />
