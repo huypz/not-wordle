@@ -107,11 +107,12 @@ function Game() {
                   <strong>Congratulations!</strong> Got it in{' '}
                   <strong>{guessResults.length} guesses</strong>.
                 </p>
-                <button onClick={restartGame}>
+                <p>
                   <strong>RESTART GAME</strong>
-                </button>
+                </p>
               </>
             }
+            onClick={restartGame}
           />
         ) : (
           <Banner
@@ -119,13 +120,15 @@ function Game() {
             children={
               <>
                 <p>
-                  Sorry, the correct answer is <strong>{answer}</strong>.
+                  Sorry, the correct answer is{' '}
+                  <strong>{answer.toUpperCase()}</strong>.
                 </p>
-                <button onClick={restartGame}>
+                <p>
                   <strong>RESTART GAME</strong>
-                </button>
+                </p>
               </>
             }
+            onClick={restartGame}
           />
         ))}
     </>

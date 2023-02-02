@@ -1,8 +1,8 @@
-function Banner({ type, children }) {
+function Banner({ type, children, onClick }) {
   return (
-    <div className={`${type} banner`}>
+    <button className={`${type} banner`} onClick={onClick}>
       {children}
-    </div>
+    </button>
   );
 }
 
