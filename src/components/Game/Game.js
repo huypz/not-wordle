@@ -82,6 +82,7 @@ function Game() {
       <form className="guess-input-wrapper" onSubmit={onSubmitGuess}>
         <label htmlFor="guess-input">Enter guess:</label>
         <input
+          required
           id="guess-input"
           type="text"
           disabled={!isGameInSession}
