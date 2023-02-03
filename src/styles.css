@@ -2,6 +2,7 @@
   Theme and global variables
 */
 html {
+  overflow-x: hidden;
   overflow-y: scroll;
 
   --game-spacing: 32px;
